@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://thymeleaf.org">
 <head th:replace="~{fragments/head-elements :: headElements}"></head>
-    <title>Fairfield Library - System Administration - Manage Publishers</title>
+    <title>City Library - System Administration - Manage Publishers</title>
 </head>
 <body>
   <div id="page-content">
@@ -92,19 +92,58 @@
                     <th scope="col">&nbsp;</th>
                 </tr>
                 </thead>
+<!--                <tbody>-->
+<!--                <tr th:each="publisher,iterStat : ${publishers}">-->
+<!--                    &lt;!&ndash;th:onclick="@{document.location='/elibrary/book/edit/{bookId}'(bookId=${book.bookId})}" &ndash;&gt;-->
+<!--                    <th scope="row" th:text="${iterStat.count}+${'.'}"></th>-->
+<!--                    <td th:text="${publisher.name}"></td>-->
+<!--                    <td th:if="${publisher.primaryAddress != null}">-->
+<!--                        <p>-->
+<!--                            <span th:text="${publisher.primaryAddress.street}"></span><br>-->
+<!--                            <span th:text="${publisher.primaryAddress.city}+${', '}+${publisher.primaryAddress.state}+${' '}+${publisher.primaryAddress.zipCode}"></span>-->
+<!--                        </p>-->
+<!--&lt;!&ndash;                        <a th:href="@{'/secured/sysadmin/publisher/primaryAddress/delete/{publisherId}'(publisherId=${publisher.publisherId})}">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fa-solid fa-delete-left"></i> Delete Address&ndash;&gt;-->
+<!--&lt;!&ndash;                        </a>&ndash;&gt;-->
+<!--                        <a href="#" data-bs-toggle="modal" data-bs-target="#deleteOperationModalDialog" data-bs-whattodelete="primaryaddress" th:data-bs-publisherid="${publisher.publisherId}" th:data-bs-addrstreet="${publisher.primaryAddress.street}" th:data-bs-addrcity="${publisher.primaryAddress.city}" th:data-bs-addrstate="${publisher.primaryAddress.state}" th:data-bs-addrzipcode="${publisher.primaryAddress.zipCode}">-->
+<!--                            <i class="fa-solid fa-delete-left"></i> Delete Address-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                    <td th:if="${publisher.primaryAddress == null}" th:text="${''}"></td>-->
+<!--                    <td>-->
+<!--                        <a th:href="@{'/secured/sysadmin/publisher/edit/{publisherId}'(publisherId=${publisher.publisherId})}">-->
+<!--                            <i class="fa-regular fa-pen-to-square"></i> Edit Publisher-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--&lt;!&ndash;                        <a th:href="@{'/secured/sysadmin/publisher/delete/{publisherId}'(publisherId=${publisher.publisherId})}">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fa-solid fa-delete-left"></i> Delete Publisher&ndash;&gt;-->
+<!--&lt;!&ndash;                        </a>&ndash;&gt;-->
+<!--                        <a href="#" data-bs-toggle="modal" data-bs-target="#deleteOperationModalDialog" data-bs-whattodelete="publisher" th:data-bs-publisherid="${publisher.publisherId}" th:data-bs-publishername="${publisher.name}">-->
+<!--                            <i class="fa-solid fa-delete-left"></i> Delete Publisher-->
+<!--                        </a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr th:if="${publishers.isEmpty()}">-->
+<!--                    <td colspan="8" th:align="center">No publishers found</td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+
+
+
+<!--                above code i comment out and This the code i Changed blow to show me contunes numbering in the next page-->
+
                 <tbody>
-                <tr th:each="publisher,iterStat : ${publishers}">
-                    <!--th:onclick="@{document.location='/elibrary/book/edit/{bookId}'(bookId=${book.bookId})}" -->
-                    <th scope="row" th:text="${iterStat.count}+${'.'}"></th>
+                <tr th:each="publisher, iterStat : ${publishers}">
+                    <!-- Calculate the continuous numbering -->
+                    <th scope="row" th:text="${(currentPageNo * publishers.pageable.pageSize) + iterStat.index + 1}"></th>
                     <td th:text="${publisher.name}"></td>
                     <td th:if="${publisher.primaryAddress != null}">
                         <p>
                             <span th:text="${publisher.primaryAddress.street}"></span><br>
-                            <span th:text="${publisher.primaryAddress.city}+${', '}+${publisher.primaryAddress.state}+${' '}+${publisher.primaryAddress.zipCode}"></span>
+                            <span th:text="${publisher.primaryAddress.city} + ${', '} + ${publisher.primaryAddress.state} + ${' '} + ${publisher.primaryAddress.zipCode}"></span>
                         </p>
-<!--                        <a th:href="@{'/secured/sysadmin/publisher/primaryAddress/delete/{publisherId}'(publisherId=${publisher.publisherId})}">-->
-<!--                            <i class="fa-solid fa-delete-left"></i> Delete Address-->
-<!--                        </a>-->
                         <a href="#" data-bs-toggle="modal" data-bs-target="#deleteOperationModalDialog" data-bs-whattodelete="primaryaddress" th:data-bs-publisherid="${publisher.publisherId}" th:data-bs-addrstreet="${publisher.primaryAddress.street}" th:data-bs-addrcity="${publisher.primaryAddress.city}" th:data-bs-addrstate="${publisher.primaryAddress.state}" th:data-bs-addrzipcode="${publisher.primaryAddress.zipCode}">
                             <i class="fa-solid fa-delete-left"></i> Delete Address
                         </a>
@@ -116,10 +155,6 @@
                         </a>
                     </td>
                     <td>
-<!--                        <a th:href="@{'/secured/sysadmin/publisher/delete/{publisherId}'(publisherId=${publisher.publisherId})}">-->
-<!--                        <a href="#">-->
-<!--                            <i class="fa-solid fa-delete-left"></i> Delete Publisher-->
-<!--                        </a>-->
                         <a href="#" data-bs-toggle="modal" data-bs-target="#deleteOperationModalDialog" data-bs-whattodelete="publisher" th:data-bs-publisherid="${publisher.publisherId}" th:data-bs-publishername="${publisher.name}">
                             <i class="fa-solid fa-delete-left"></i> Delete Publisher
                         </a>
@@ -129,16 +164,21 @@
                     <td colspan="8" th:align="center">No publishers found</td>
                 </tr>
                 </tbody>
+
+
+
+
+
             </table>
             <!--Pagination-->
             <div>
-                <ul class="pagination">
+                <ul th:if="${!publishers.isEmpty()}" class="pagination">
                     <li class="page-item disabled">
                         <a class="page-link" href="#">Pages: </a>
                     </li>
                     <li th:each="i : ${#numbers.sequence(1, publishers.totalPages)}"
                         th:class="${currentPageNo}==${i-1}?'page-item active':'page-item'">
-                        <a th:href="@{/secured/sysadmin/publisher/list(pageNo=${i-1})}"
+                        <a th:href="@{/secured/sysadmin/publisher/list(pageNo=${i})}"
                            th:text="${i}" class = "page-link"></a>
                     </li>
                 </ul>

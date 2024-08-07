@@ -6,11 +6,14 @@ import edu.miu.cs.cs425.fairfieldlibraryapp.repository.PublisherRepository;
 import edu.miu.cs.cs425.fairfieldlibraryapp.service.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PublisherServiceImpl implements PublisherService {
@@ -31,10 +34,36 @@ public class PublisherServiceImpl implements PublisherService {
     public Page<Publisher> getAllPublishersPaged(int pageNo) {
         return publisherRepository.findAll(
             PageRequest.of(pageNo,
-                4,
+                3,
                 Sort.by(Sort.Direction.ASC, "name"))
         );
     }
+
+
+//
+//    @Override
+//    public Page<Publisher> getAllPublishersPaged(int pageNo) {
+//        int pageSize = 3; // Number of records per page
+//        Page<Publisher> publisherPage = publisherRepository.findAll(
+//                PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "name"))
+//        );
+//
+//        int startIndex = pageNo * pageSize;
+//
+//        List<Publisher> publishersWithIndex = publisherPage.getContent().stream()
+//                .map(publisher -> {
+//                    publisher.setDisplayIndex(startIndex + publisherPage.getContent().indexOf(publisher) + 1);
+//                    return publisher;
+//                })
+//                .collect(Collectors.toList());
+//
+//        return new PageImpl<>(publishersWithIndex, publisherPage.getPageable(), publisherPage.getTotalElements());
+//    }
+
+
+
+
+
 
     @Override
     public Publisher savePublisher(Publisher publisher) {
@@ -76,11 +105,14 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public List<Publisher> searchPublishers(String searchString) {
 //        return publisherRepository.findByNameContaining(searchString);
-        return publisherRepository.findAllByNameContainingOrPrimaryAddress_StreetContainingOrPrimaryAddress_CityContainingOrPrimaryAddress_StateContainingOrPrimaryAddress_ZipCodeContaining
+        return publisherRepository.findAllByNameContainingOrPrimaryAddress_StreetContainingOrPrimaryAddress_CityContainingOrPrimaryAddress_StateContainingOrPrimaryAddress_ZipCodeContainingOrderByName
                 (
                     searchString, searchString,
                         searchString, searchString, searchString
                 );
+//                .stream()
+//                .sorted(Comparator.comparing(Publisher::getName))
+//                .toList();
     }
     
 }

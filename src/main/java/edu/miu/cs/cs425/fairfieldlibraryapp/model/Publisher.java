@@ -2,8 +2,12 @@ package edu.miu.cs.cs425.fairfieldlibraryapp.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+@Getter
+@Setter
 @Entity
 @Table(name="publishers")
 public class Publisher {
@@ -51,4 +55,20 @@ public class Publisher {
     public void setPrimaryAddress(Address primaryAddress) {
         this.primaryAddress = primaryAddress;
     }
+
+
+    @Transient
+    private int displayIndex;
+
+    // Getters and Setters
+
+//    public int getDisplayIndex() {
+//        return displayIndex;
+//    }
+//
+//    public void setDisplayIndex(int displayIndex) {
+//        this.displayIndex = displayIndex;
+//    }
+
+
 }
